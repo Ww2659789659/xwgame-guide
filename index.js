@@ -97,5 +97,4 @@ const server = http.createServer(async (req, res) => {
   sendJSON(res,404,{error:"Not Found"});
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log("Server running on port "+PORT));
+module.exports = server;
