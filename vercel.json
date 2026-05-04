@@ -1,9 +1,0 @@
-{
-  "build命令"：“”,
-  "outputDirectory": "",
-  "功能": {
-    "api/index.js": {
-      "运行时": "@Vercel/node@3"
-    }
-  }
-}
