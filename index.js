@@ -19,17 +19,28 @@ function sendJSON(res, code, data) {
 
 async function callAI(imageUrl) {
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25000);
+    
     const r = await fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", {
       method:"POST",
       headers:{"Authorization":"Bearer "+ZHIPU_API_KEY,"Content-Type":"application/json"},
       body: JSON.stringify({
         model:"glm-4v",
         messages:[{role:"user",content:[{type:"text",text:"识别图中敌方英雄，已知英雄："+ALL_HEROES.join("、")+"。直接返回英雄名，逗号分隔。"},{type:"image_url",image_url:{url:imageUrl}}]}]
-      })
+      }),
+      signal: controller.signal
     });
+    
+    clearTimeout(timeout);
     const d = await r.json();
-    return d.choices[0].message.content;
-  } catch(e) { return null; }
+    if (d.choices && d.choices[0]) {
+      return d.choices[0].message.content;
+    }
+    return null;
+  } catch(e) { 
+    return null; 
+  }
 }
 
 function getHeroes(text) {
